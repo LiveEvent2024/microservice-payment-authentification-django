@@ -50,18 +50,14 @@ def PaymentDetail(request, pk):
 
 @api_view(['POST'])
 def PaymentCreate(request):
-    try:
-        date_object = datetime.strptime(request.data['transactionDate'], '%m/%d/%Y').date()
-        request.data['transactionDate']=date_object
-        serializer = PaymentSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    except KeyError:
-        return Response({'error': 'Token is missing'}, status=status.HTTP_400_BAD_REQUEST)
-    except jwt.ExpiredSignatureError:
-        return Response({'error': 'Token has expired'}, status=status.HTTP_400_BAD_REQUEST)
-    except jwt.InvalidTokenError:
-        return Response({'error': 'Invalid token'}, status=status.HTTP_400_BAD_REQUEST)
+    date_object = datetime.strptime(request.data['transactionDate'], '%m/%d/%Y').date()
+    request.data['transactionDate']=date_object
+
+    print(request.data)
+    serializer = PaymentSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
